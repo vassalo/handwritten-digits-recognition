@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css?family=Walter+Turncoat");
+@import url("https://fonts.googleapis.com/css?family=Abel");
+
+@font-face {
+    font-family: "Berton Roman";
+    src: url("assets/fonts/berton.roman-regular.ttf");
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-size: 30pt;
+    font-family: Abel, serif;
+    text-align: center;
+    font-weight: bold;
+    background: #58985a;
+}
+
+h1 {
+    color: white;
+    margin: 0;
+    padding: 15px;
+    font-family: "Berton Roman", Abel, serif;
+    font-size: 0.8em;
+    line-height: 1em;
+}
+
+.container {
+    height: 218px;
+    padding: 13px 0 0 0;
+    margin-top: 40px;
+    background-image: url("assets/images/blackboard frame.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.container::before {
+    width: 120px;
+    height: 50px;
+    position: absolute;
+    left: calc(50% - 60px);
+    background: #eee8aa;
+    content: attr(data-guess);
+    font-size: 0.44em;
+    transition: transform 0.5s;
+    z-index: -1;
+    white-space: pre;
+}
+
+.container.drawing::before {
+    transform: translateY(-55px);
+}
+
+.container::after {
+    width: 75px;
+    height: 65px;
+    padding: 5px 0;
+    position: relative;
+    left: calc(50% + 25px);
+    bottom: 175px;
+    background: lightgrey;
+    display: block;
+    content: attr(data-train);
+    font-size: 0.4em;
+    transition: transform 0.5s;
+    z-index: -1;
+    white-space: pre;
+}
+
+.container.training::after {
+    transform: translateX(83px);
+}
+
+#canvas {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    /*border: 8px solid #a5612a;*/
+}
+
+div.settings {
+    padding-top: 15px;
+    width: 300px;
+    margin: auto;
+    /*background-image: url("assets/images/divider.png");*/
+}
+
+div.option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+    color: white;
+    font-family: "Walter Turncoat", cursive;
+}
+
+div.option:last-child {
+    margin-bottom: 0;
+}
+
+div.option label {
+    font-size: 0.4em;
+    letter-spacing: 1px;
+}
+
+div.option * {
+    margin: 5px 0;
+}
+
+div.option *:last-child {
+    margin-bottom: 0;
+}
+
+div.option span {
+    font-size: 0.5em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+input#brushSize {
+    width: 180px;
+    vertical-align: middle;
+}
+
+input#import {
+    margin: 5px;
+}
+
+button {
+    font-size: 0.35em;
+    padding: 5px 10px 10px;
+    font-family: Abel, serif;
+    letter-spacing: 1px;
+    font-weight: bold;
+    display: inline-block;
+    outline: none;
+    border: none;
+    border-radius: 0.15em;
+    box-sizing: border-box;
+    color: white;
+    background-color: #3369ff;
+    box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:active {
+    top: 0.1em;
+}
+
+button.stop {
+    background: #ff3333;
+}

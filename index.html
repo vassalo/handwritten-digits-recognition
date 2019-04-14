@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <title>Neural Network - Handwritten Digits Recognition</title>
+    <link href='styles.css' rel='stylesheet'>
+    <script src="addons/p5.min.js"></script>
+    <script src="addons/p5.dom.min.js"></script>
+    <script src="addons/p5.sound.min.js"></script>
+    <script src="lib/matrix.js"></script>
+    <script src="lib/mnist/mnist.js"></script>
+    <script src="neural-network.js"></script>
+    <script src="sketch.js"></script>
+</head>
+<body>
+<h1>Handwritten Digits Recognition</h1>
+
+<div class="container">
+    <div id="canvas"></div>
+</div>
+
+<div class="settings">
+    <div class="option">
+        <span>Drawing Settings</span>
+        <label>Brush size
+            <input id="brushSize" type="range" min="10" max="30" value="16"/>
+        </label>
+        <button onclick="resetDrawing()">Reset Drawing</button>
+    </div>
+    <div class="option">
+        <span>Training Settings</span>
+        <label class="">
+            <input id="useTrainedNN" type="checkbox" onclick="switchNeuralNetwork()"/>
+            Use trained Neural Network
+        </label>
+        <button id="btnTraining" onclick="switchTraining()">Start training</button>
+    </div>
+</div>
+</body>
+</html>
