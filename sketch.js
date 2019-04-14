@@ -1,12 +1,12 @@
-const desiredDigits = [2, 5, 8], trainsPerFrame = 10, canvasWidth = 200, canvasHeight = 200;
+const desiredDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], trainsPerFrame = 10, canvasWidth = 200, canvasHeight = 200;
 
 let mnist, brain, trainedBrain, isLooping = true, userDigit, canvasContainer, trainedTimes = 0, trainedCorrect = 0;
 let trainImages = [], trainLabels = [], canTrain = false, hasUserData = false;
 
 function createNeuralNetwork() {
     const nn = new NeuralNetwork(784, desiredDigits.length);
-    nn.addHiddenLayer(16);
-    nn.addHiddenLayer(16);
+    nn.addHiddenLayer(200);
+    nn.addHiddenLayer(80);
     return nn;
 }
 
