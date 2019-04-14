@@ -28,8 +28,6 @@ function setup() {
                 trainLabels.push(mnist.train_labels[i]);
             }
         }
-        // console.log(trainImages);
-        // console.log(trainLabels);
     });
 }
 
@@ -51,6 +49,9 @@ function draw() {
         userDigit.stroke(255);
         userDigit.strokeWeight(select('#brushSize').value());
         userDigit.line(mouseX, mouseY, pmouseX, pmouseY);
+        select('body').elt.classList.add('no-scroll');
+    } else {
+        select('body').elt.classList.remove('no-scroll');
     }
 }
 

@@ -154,3 +154,7 @@ button:active {
 button.stop {
     background: #ff3333;
 }
+
+.no-scroll {
+    overflow: hidden;
+}

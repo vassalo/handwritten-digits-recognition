@@ -17,7 +17,7 @@
 <body>
 <h1>Handwritten Digits Recognition</h1>
 
-<div class="container">
+<div class="container" data-train="Loading...">
     <div id="canvas"></div>
 </div>
 
@@ -31,7 +31,7 @@
     </div>
     <div class="option">
         <span>Training Settings</span>
-        <label class="">
+        <label>
             <input id="useTrainedNN" type="checkbox" onclick="switchNeuralNetwork()"/>
             Use trained Neural Network
         </label>
