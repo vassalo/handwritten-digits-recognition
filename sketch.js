@@ -17,7 +17,11 @@ function setup() {
 
     brain = createNeuralNetwork();
 
-    loadJSON("trained-nn.json", response => trainedBrain = NeuralNetwork.deserialize(JSON.stringify(response)));
+    loadJSON("trained-nn.json", response => {
+        trainedBrain = NeuralNetwork.deserialize(JSON.stringify(response));
+        select('#application').style('visibility', 'visible');
+        select('#loading').style('display', 'none');
+    });
 
     loadMNIST((data) => {
         mnist = data;
@@ -123,18 +127,13 @@ function resetDrawing() {
 }
 
 function switchNeuralNetwork() {
-    do {
-        try {
-            const useTrained = select('#useTrainedNN').checked();
+    const useTrained = select('#useTrainedNN').checked();
 
-            if (useTrained) {
-                brain = trainedBrain;
-            } else {
-                brain = createNeuralNetwork();
-            }
-        } catch (e) {
-        }
-    } while(!select);
+    if (useTrained) {
+        brain = trainedBrain;
+    } else {
+        brain = createNeuralNetwork();
+    }
 }
 
 function switchTraining() {
