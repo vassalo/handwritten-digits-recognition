@@ -100,7 +100,7 @@ function train(trainIndex) {
 }
 
 function guessUserDigit() {
-    if (hasUserData) {
+    if (hasUserData && brain) {
         let inputs = [];
         let img = userDigit.get();
         img.resize(28, 28);
@@ -123,13 +123,18 @@ function resetDrawing() {
 }
 
 function switchNeuralNetwork() {
-    const useTrained = select('#useTrainedNN').checked();
+    do {
+        try {
+            const useTrained = select('#useTrainedNN').checked();
 
-    if (useTrained) {
-        brain = trainedBrain;
-    } else {
-        brain = createNeuralNetwork();
-    }
+            if (useTrained) {
+                brain = trainedBrain;
+            } else {
+                brain = createNeuralNetwork();
+            }
+        } catch (e) {
+        }
+    } while(!select);
 }
 
 function switchTraining() {
