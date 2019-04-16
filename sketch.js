@@ -15,10 +15,9 @@ function setup() {
     createCanvas(canvasWidth, canvasHeight).parent('canvas');
     userDigit = createGraphics(200, 200);
 
-    brain = createNeuralNetwork();
-
     loadJSON("trained-nn.json", response => {
         trainedBrain = NeuralNetwork.deserialize(JSON.stringify(response));
+        brain = trainedBrain;
         select('#application').style('visibility', 'visible');
         select('#loading').style('display', 'none');
     });
