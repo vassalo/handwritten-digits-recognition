@@ -1,12 +1,13 @@
-const desiredDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], trainsPerFrame = 10, canvasWidth = 200, canvasHeight = 200;
+const desiredDigits = [0, 1], trainsPerFrame = 100, canvasWidth = 200, canvasHeight = 200;
 
 let mnist, brain, trainedBrain, isLooping = true, userDigit, canvasContainer, trainedTimes = 0, trainedCorrect = 0;
 let trainImages = [], trainLabels = [], canTrain = false, hasUserData = false;
+let trainSubsetImages = [], trainSubsetLabels = [];
 
 function createNeuralNetwork() {
     const nn = new NeuralNetwork(784, desiredDigits.length);
-    nn.addHiddenLayer(200);
-    nn.addHiddenLayer(80);
+    nn.addHiddenLayer(16);
+    nn.addHiddenLayer(16);
     return nn;
 }
 
@@ -14,13 +15,6 @@ function setup() {
     canvasContainer = document.getElementsByClassName('container')[0];
     createCanvas(canvasWidth, canvasHeight).parent('canvas');
     userDigit = createGraphics(200, 200);
-
-    loadJSON("trained-nn.json", response => {
-        trainedBrain = NeuralNetwork.deserialize(JSON.stringify(response));
-        brain = trainedBrain;
-        select('#application').style('visibility', 'visible');
-        select('#loading').style('display', 'none');
-    });
 
     loadMNIST((data) => {
         mnist = data;
@@ -31,6 +25,17 @@ function setup() {
                 trainLabels.push(mnist.train_labels[i]);
             }
         }
+
+        for (let i = 0; i < trainsPerFrame; i++) {
+            const idx = Math.ceil(random(trainImages.length - 1));
+            trainSubsetImages.push(trainImages[idx]);
+            trainSubsetLabels.push(trainLabels[idx]);
+        }
+
+        brain = createNeuralNetwork();
+
+        select('#application').style('visibility', 'visible');
+        select('#loading').style('display', 'none');
     });
 }
 
@@ -38,10 +43,8 @@ function draw() {
     background(0);
 
     if (canTrain && mnist) {
-        for (let i = 0; i < trainsPerFrame; i++) {
-            const trainIndex = Math.ceil(random(trainImages.length - 1));
-            train(trainIndex);
-        }
+        // console.log('trained:', ++trainedTimes);
+        brain.spidersColony.train();
     }
 
     guessUserDigit();
@@ -69,41 +72,8 @@ function getAnswer(outputs) {
     return desiredDigits[index];
 }
 
-function train(trainIndex) {
-    try {
-        trainedTimes++;
-        let label = trainLabels[trainIndex];
-
-        let inputs = [];
-        for (let i = 0; i < 784; i++) {
-            let bright = trainImages[trainIndex][i];
-            inputs[i] = bright / 255;
-        }
-
-        let targets = Array(desiredDigits.length).fill(0);
-        targets[desiredDigits.findIndex((el) => el === label)] = 1;
-
-        brain.train(inputs, targets);
-
-        let guess = getAnswer(brain.predict(inputs));
-        if (label === guess) {
-            trainedCorrect++;
-        }
-
-        const accuracy = (trainedCorrect / trainedTimes) * 100;
-        canvasContainer.setAttribute('data-train', 'Training\nAccuracy:\n' + accuracy.toFixed(2) + '%');
-
-        if (trainedTimes === 60 * trainsPerFrame) {
-            trainedTimes = trainedCorrect = 0;
-        }
-    } catch (e) {
-        console.error('trainIndex:', trainIndex, 'trainImages.length', trainImages.length);
-        console.error(e);
-    }
-}
-
 function guessUserDigit() {
-    if (hasUserData && brain) {
+    if (hasUserData && brain && brain.spidersColony) {
         let inputs = [];
         let img = userDigit.get();
         img.resize(28, 28);
@@ -125,32 +95,22 @@ function resetDrawing() {
     userDigit.background(0);
 }
 
-function switchNeuralNetwork() {
-    const useTrained = select('#useTrainedNN').checked();
-
-    if (useTrained) {
-        brain = trainedBrain;
-    } else {
-        brain = createNeuralNetwork();
-    }
-}
-
-function switchTraining() {
+function toggleTraining() {
     canTrain = !canTrain;
 
     const btnTraining = select('#btnTraining');
-    const checkboxTrained = select('#useTrainedNN');
+    // const checkboxTrained = select('#useTrainedNN');
     let action;
     if (canTrain) {
         canvasContainer.classList.add('training');
         action = 'Stop';
         btnTraining.addClass('stop');
-        checkboxTrained.attribute('disabled', '');
+        // checkboxTrained.attribute('disabled', '');
     } else {
         canvasContainer.classList.remove('training');
         action = 'Start';
         btnTraining.removeClass('stop');
-        checkboxTrained.removeAttribute('disabled');
+        // checkboxTrained.removeAttribute('disabled');
     }
 
     btnTraining.html(action + ' training');

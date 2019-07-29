@@ -1,40 +1,16 @@
+const spidersQuantity = 25;
+
 class NeuralNetwork {
     constructor(inputNodes, outputNodes) {
-        if (typeof inputNodes === 'number') {
-            this.layersNodes = [inputNodes, outputNodes];
+        this.layersNodes = [inputNodes, outputNodes];
+        this.setLearningRate();
+        this.setActivationFunction();
 
-            this.bootstrapWeigths();
-            this.setLearningRate();
-            this.setActivationFunction();
-        } else {
-            let data = inputNodes;
-            let activationFunc = outputNodes === undefined ? sigmoid : outputNodes;
-
-            this.layersNodes = data.layersNodes;
-
-            this.weights = [];
-            for (let m of data.weights) {
-                this.weights.push(new Matrix(m.rows, m.cols).map((el, i, j) => m.data[i][j]));
-            }
-
-            this.bias = [];
-            for (let m of data.bias) {
-                this.bias.push(new Matrix(m.rows, m.cols).map((el, i, j) => m.data[i][j]));
-            }
-
-            this.learningRate = data.learningRate;
-
-            this.setActivationFunction(activationFunc);
-        }
+        this.spidersColony = new Colony(spidersQuantity, this, this.layersNodes);
     }
 
     bootstrapWeigths() {
-        this.weights = [];
-        this.bias = [];
-        for (let i = 1; i < this.layersNodes.length; i++) {
-            this.weights.push(new Matrix(this.layersNodes[i], this.layersNodes[i - 1]).randomize());
-            this.bias.push(new Matrix(this.layersNodes[i], 1).randomize());
-        }
+        this.spidersColony.bootstrapColony(spidersQuantity, this.layersNodes);
     }
 
     setLearningRate(learningRate = 0.1) {
@@ -53,60 +29,20 @@ class NeuralNetwork {
         this.bootstrapWeigths();
     }
 
-    predict(inputArray) {
+    predict(inputArray, spider = undefined) {
+        if (spider === undefined) {
+            spider = this.spidersColony.getBestSpider().value;
+        }
+
         let outputs = Matrix.fromArray(inputArray);
-        for (let i = 0; i < this.weights.length; i++) {
-            outputs = Matrix.multiply(this.weights[i], outputs);
-            outputs.add(this.bias[i]);
+        for (let i = 0; i < spider.weights.length; i++) {
+            outputs = Matrix.multiply(spider.weights[i], outputs);
+            outputs.add(spider.bias[i]);
             // activation function!
             outputs.map(this.activationFunction.func);
         }
 
         return outputs.toArray();
-    }
-
-    train(inputArray, targetArray) {
-        let inputs = Matrix.fromArray(inputArray);
-        let outputs = [];
-        for (let i = 0; i < this.weights.length; i++) {
-            outputs.push(Matrix.multiply(this.weights[i], i === 0 ? inputs : outputs[i - 1]));
-            outputs[i].add(this.bias[i]);
-            // activation function!
-            outputs[i].map(this.activationFunction.func);
-        }
-
-        let targets = Matrix.fromArray(targetArray);
-        // Calculate the error
-        // ERROR = TARGETS - OUTPUTS
-        let outputErrors = Matrix.subtract(targets, outputs[outputs.length - 1]);
-        for (let i = outputs.length - 1; i >= 0; i--) {
-            // Calculate the error
-            outputErrors = i === outputs.length - 1 ? outputErrors
-                : Matrix.multiply(Matrix.transpose(this.weights[i + 1]), outputErrors);
-
-            // Calculate gradient
-            let gradients = Matrix.map(outputs[i], this.activationFunction.dfunc);
-            gradients.multiply(outputErrors);
-            gradients.multiply(this.learningRate);
-
-            // Calculate deltas
-            let inputsT = Matrix.transpose(i === 0 ? inputs : outputs[i - 1]);
-            let weightDeltas = Matrix.multiply(gradients, inputsT);
-
-            // Adjust the weights by deltas
-            this.weights[i].add(weightDeltas);
-            // Adjust the bias by its deltas (which is just the gradients)
-            this.bias[i].add(gradients);
-        }
-    }
-
-    serialize() {
-        return JSON.stringify(this);
-    }
-
-    static deserialize(data) {
-        data = JSON.parse(data);
-        return new NeuralNetwork(data);
     }
 }
 

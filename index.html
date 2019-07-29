@@ -10,7 +10,9 @@
     <script src="addons/p5.dom.min.js"></script>
     <script src="addons/p5.sound.min.js"></script>
     <script src="lib/matrix.js"></script>
+    <script src="lib/matricesArray.js"></script>
     <script src="lib/mnist/mnist.js"></script>
+    <script src="colony.js"></script>
     <script src="neural-network.js"></script>
     <script src="sketch.js"></script>
 </head>
@@ -32,11 +34,7 @@
         </div>
         <div class="option">
             <span>Training Settings</span>
-            <label>
-                <input id="useTrainedNN" type="checkbox" onclick="switchNeuralNetwork()" checked/>
-                Use trained Neural Network
-            </label>
-            <button id="btnTraining" onclick="switchTraining()">Start training</button>
+            <button id="btnTraining" onclick="toggleTraining()">Start training</button>
         </div>
     </div>
 </div>
