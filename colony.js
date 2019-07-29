@@ -1,4 +1,5 @@
 const PF = 0.7;
+let iteration = 0;
 
 class Colony {
     constructor(N, neuralNet, layersNodes) {
@@ -43,6 +44,7 @@ class Colony {
         // Step 6
         this.crossover();
 
+        emitLog(++iteration, accuracy);
         canvasContainer.setAttribute('data-train', 'Training\nAccuracy:\n' + accuracy.toFixed(2) + '%');
     }
 
@@ -278,7 +280,7 @@ class Colony {
                 const females = [];
                 for (let f = 0; f < this.Nf; f++) {
                     const dist = MatricesArray.distance(this.spiders[i].value.weights, this.spiders[f].value.weights);
-                    console.log('dist', dist);
+                    // console.log('dist', dist);
                     if (dist <= this.crossoverRadius) {
                         females.push(this.spiders[f]);
                     }
@@ -327,6 +329,6 @@ class Colony {
                 }
             }
         }
-        console.log('crossover finished');
+        console.log('[' + iteration + '] crossover finished');
     }
 }

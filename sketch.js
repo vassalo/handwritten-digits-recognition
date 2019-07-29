@@ -3,6 +3,7 @@ const desiredDigits = [0, 1], trainsPerFrame = 100, canvasWidth = 200, canvasHei
 let mnist, brain, trainedBrain, isLooping = true, userDigit, canvasContainer, trainedTimes = 0, trainedCorrect = 0;
 let trainImages = [], trainLabels = [], canTrain = false, hasUserData = false;
 let trainSubsetImages = [], trainSubsetLabels = [];
+let log = 'Iteration,Accuracy\n';
 
 function createNeuralNetwork() {
     const nn = new NeuralNetwork(784, desiredDigits.length);
@@ -114,4 +115,13 @@ function toggleTraining() {
     }
 
     btnTraining.html(action + ' training');
+}
+
+function emitLog(iteration, accuracy) {
+    log += iteration + ',' + accuracy + '\n';
+}
+
+function exportLog() {
+    const blob = new Blob([log], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "log.txt");
 }

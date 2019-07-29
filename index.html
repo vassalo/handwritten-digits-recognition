@@ -9,6 +9,7 @@
     <script src="addons/p5.min.js"></script>
     <script src="addons/p5.dom.min.js"></script>
     <script src="addons/p5.sound.min.js"></script>
+    <script src="addons/FileSaver.js"></script>
     <script src="lib/matrix.js"></script>
     <script src="lib/matricesArray.js"></script>
     <script src="lib/mnist/mnist.js"></script>
@@ -35,6 +36,7 @@
         <div class="option">
             <span>Training Settings</span>
             <button id="btnTraining" onclick="toggleTraining()">Start training</button>
+            <button id="btnLog" onclick="exportLog()">Export Log</button>
         </div>
     </div>
 </div>
